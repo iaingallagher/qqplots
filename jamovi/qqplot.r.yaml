@@ -1,0 +1,11 @@
+---
+name:  qqplot
+title: Q-Q Normal Plot
+jrs:   '1.1'
+
+items:
+    - name:  text
+      title: Q-Q Normal Plot
+      type:  Preformatted
+
+...
