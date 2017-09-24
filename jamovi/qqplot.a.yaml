@@ -1,7 +1,8 @@
 ---
 name:  qqplot
 title: Q-Q Normal Plot
-menuGroup: qqplots
+menuGroup: Exploration
+menuSubgroup: qqplot
 version: '1.0.0'
 jas: '1.1'
 
