@@ -11,7 +11,7 @@ qqplotClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             # `self$options` contains the options
             # `self$results` contains the results object (to populate)
           
-          qqvar <- self$options$data[,self$options$var]
+          qqvar <- self$data[,self$options$var]
           qqdata <- qqnorm(qqvar, plot.it=FALSE)
           plotData <- data.frame(x=qqdata$x, y=qqdata$y)
 
