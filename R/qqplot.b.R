@@ -26,7 +26,7 @@ qqplotClass <- if (requireNamespace('jmvcore')) R6::R6Class(
       
       # create plot
       qqpl <- ggplot(plotData, aes(x,y)) + geom_point() 
-      + labs(x='Theoretical Quantiles', y='Actual Quantiles', title=paste('QQ Normal Plot for', var, sep=' '))
+      + labs(x='Theoretical Quantiles', y='Actual Quantiles', title='QQ Normal Plot for')
       
       print(qqpl)
       TRUE
