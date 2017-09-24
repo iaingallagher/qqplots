@@ -4,8 +4,10 @@ title: Q-Q Normal Plot
 jrs:   '1.1'
 
 items:
-    - name:  text
+    - name:  plot
       title: Q-Q Normal Plot
-      type:  Preformatted
-
+      type:  Image
+      width: 300
+      height: 400
+      renderFun: .plot
 ...
