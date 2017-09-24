@@ -15,5 +15,9 @@ qqplotClass <- if (requireNamespace('jmvcore')) R6::R6Class(
           qqdata <- qqnorm(qqvar, plot.it=FALSE)
           plotData <- data.frame(x=qqdata$x, y=qqdata$y)
 
+        },
+    
+    .plot=function(image, ...) {  # <-- the plot function
+      
         })
 )
