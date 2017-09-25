@@ -19,17 +19,18 @@ qqplotClass <- if (requireNamespace('jmvcore')) R6::R6Class(
           
           image <- self$results$plot #set up for plotting
           image$setState(plotData)
-          }
+          } 
         },
     
     .plot=function(image, ...) {  # <-- the plot function
       
       plotData <- image$state # grab data
-      
+      if ( ! is.null(self$options$var)){
       # create plot
       qqpl <- ggplot(plotData, aes(x,y)) + geom_point() + labs(x='Theoretical Quantiles', y='Actual Quantiles', title=paste('Q-Q Normal Plot:', self$options$var, sep=' '))
       
       print(qqpl)
       TRUE
+      }
         })
 )
