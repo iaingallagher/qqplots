@@ -11,13 +11,15 @@ qqplotClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             # `self$options` contains the options
             # `self$results` contains the results object (to populate)
           
+          if ( ! is.null(self$options$var)){ # check for var before running analysis
+          
           qqvar <- self$data[,self$options$var] # data to examine
           qqdata <- qqnorm(qqvar, plot.it=FALSE) # x & y coords
           plotData <- data.frame(x=qqdata$x, y=qqdata$y) # assembl DF for plotting
           
           image <- self$results$plot #set up for plotting
           image$setState(plotData)
-
+          }
         },
     
     .plot=function(image, ...) {  # <-- the plot function
