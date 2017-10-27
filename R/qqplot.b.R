@@ -1,36 +1,64 @@
 
-# This file is a generated template, your changes will not be overwritten
-
 qqplotClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     "qqplotClass",
     inherit = qqplotBase,
     private = list(
+        #### run function ----
         .run = function() {
-
-            # `self$data` contains the data
-            # `self$options` contains the options
-            # `self$results` contains the results object (to populate)
-          
-          if ( ! is.null(self$options$var)){ # check for var before running analysis
-          
-          qqvar <- self$data[,self$options$var] # data to examine
-          qqdata <- qqnorm(qqvar, plot.it=FALSE) # x & y coords
-          plotData <- data.frame(x=qqdata$x, y=qqdata$y) # assembl DF for plotting
-          
-          image <- self$results$plot #set up for plotting
-          image$setState(plotData)
-          } 
+            
+            if ( ! is.null(self$options$vars)) {
+                
+                data <- private$.cleanData()
+                private$.prepareQQPlots(data)
+                
+            }
         },
-    
-    .plot=function(image, ...) {  # <-- the plot function
-      
-      plotData <- image$state # grab data
-      if ( ! is.null(image$state)){
-      # create plot
-      qqpl <- ggplot(plotData, aes(x,y)) + geom_point() + labs(x='Theoretical Quantiles', y='Actual Quantiles', title=paste('Q-Q Normal Plot:', self$options$var, sep=' '))
-      
-      print(qqpl)
-      TRUE
-      }
+        
+        #### Plot function ----
+        .prepareQQPlots = function(data) {
+            
+            vars <- self$options$vars
+            images <- self$results$qqPlots
+            
+            for (var in vars) {
+                
+                image <- images$get(var)
+                
+                qqVar <- jmvcore::naOmit(data[[var]])   # Data to examine
+                qqVar <- scale(qqVar)                   # Standardize values
+                plotData <- data.frame(y=qqVar)         # Assemble DF for plotting
+                
+                image$setState(plotData)    
+            }
+        },
+        .qqPlot = function(image, ggtheme, theme, ...) {
+            
+            if (is.null(image$state))
+                return(FALSE)
+            
+            p <- ggplot(image$state) +
+                geom_abline(slope=1, intercept=0, linetype=2, colour=theme$color[1]) +
+                stat_qq(aes(sample=y), size=2, colour=theme$color[1]) +
+                labs(x='Theoretical Quantiles', y='Standardized Sample Quantiles') +
+                ggtheme # Adds the jamovi plot theme
+            
+            print(p)
+            
+            TRUE
+        },
+        
+        #### Helper functions ----
+        .cleanData = function() {
+            
+            vars <- self$options$vars
+
+            data <- list()
+            for (var in vars)
+                data[[var]] <- jmvcore::toNumeric(self$data[[var]])
+            
+            attr(data, 'row.names') <- seq_len(length(data[[1]]))
+            attr(data, 'class') <- 'data.frame'
+
+            return(data)
         })
 )

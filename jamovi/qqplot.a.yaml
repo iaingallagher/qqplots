@@ -10,7 +10,13 @@ options:
     - name: data
       type: Data
 
-    - name: var
-      title: Plot Variable
-      type: Variable
+    - name: vars
+      title: Variables
+      type: Variables
+      suggested:
+        - continuous
+      permitted:
+        - continuous
+        - nominal
+        - ordinal
 ...

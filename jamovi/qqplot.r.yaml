@@ -4,10 +4,16 @@ title: Q-Q Normal Plot
 jrs:   '1.1'
 
 items:
-    - name:  plot
-      title: Q-Q Normal Plot
-      type:  Image
-      width: 300
-      height: 400
-      renderFun: .plot
+    - name:  qqPlots
+      title: Q-Q Normal Plots
+      type: Array
+      description: an array of the Q-Q plots
+      items: (vars)
+      template:
+          title: $key
+          type:  Image
+          width: 450
+          height: 400
+          renderFun: .qqPlot
+          clearWith: []
 ...
