@@ -6,7 +6,7 @@ qqplotOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
     inherit = jmvcore::Options,
     public = list(
         initialize = function(
-            var = NULL, ...) {
+            vars = NULL, ...) {
 
             super$initialize(
                 package='qqplots',
@@ -14,38 +14,47 @@ qqplotOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 requiresData=TRUE,
                 ...)
         
-            private$..var <- jmvcore::OptionVariable$new(
-                "var",
-                var)
+            private$..vars <- jmvcore::OptionVariables$new(
+                "vars",
+                vars,
+                suggested=list(
+                    "continuous"),
+                permitted=list(
+                    "continuous",
+                    "nominal",
+                    "ordinal"))
         
-            self$.addOption(private$..var)
+            self$.addOption(private$..vars)
         }),
     active = list(
-        var = function() private$..var$value),
+        vars = function() private$..vars$value),
     private = list(
-        ..var = NA)
+        ..vars = NA)
 )
 
 qqplotResults <- if (requireNamespace('jmvcore')) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
-        plot = function() private$..plot),
-    private = list(
-        ..plot = NA),
+        qqPlots = function() private$.items[["qqPlots"]]),
+    private = list(),
     public=list(
         initialize=function(options) {
             super$initialize(
                 options=options,
                 name="",
                 title="Q-Q Normal Plot")
-            private$..plot <- jmvcore::Image$new(
+            self$add(jmvcore::Array$new(
                 options=options,
-                name="plot",
-                title="Q-Q Normal Plot",
-                width=300,
-                height=400,
-                renderFun=".plot")
-            self$add(private$..plot)}))
+                name="qqPlots",
+                title="Q-Q Normal Plots",
+                items="(vars)",
+                template=jmvcore::Image$new(
+                    options=options,
+                    title="$key",
+                    width=450,
+                    height=400,
+                    renderFun=".qqPlot",
+                    clearWith=list())))}))
 
 qqplotBase <- if (requireNamespace('jmvcore')) R6::R6Class(
     "qqplotBase",
@@ -70,22 +79,22 @@ qqplotBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #'
 #' 
 #' @param data .
-#' @param var .
+#' @param vars .
 #' @return A results object containing:
 #' \tabular{llllll}{
-#'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$qqPlots} \tab \tab \tab \tab \tab an array of the Q-Q plots \cr
 #' }
 #'
 #' @export
 qqplot <- function(
     data,
-    var) {
+    vars) {
 
     if ( ! requireNamespace('jmvcore'))
         stop('qqplot requires jmvcore to be installed (restart may be required)')
 
     options <- qqplotOptions$new(
-        var = var)
+        vars = vars)
 
     results <- qqplotResults$new(
         options = options)
